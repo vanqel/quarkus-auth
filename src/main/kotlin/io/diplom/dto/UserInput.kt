@@ -7,7 +7,7 @@ import io.diplom.security.models.AuthorityName
 import java.time.LocalDate
 
 data class UserInput(
-    val login: String,
+    val login: String? = "user_${Math.random()*100000+100000}",
     val password: String,
     val firstName: String,
     val lastName: String,
