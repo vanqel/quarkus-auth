@@ -1,0 +1,69 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version "2.0.21"
+    id "org.jetbrains.kotlin.plugin.allopen" version "2.0.21"
+    id 'io.quarkus'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation 'io.quarkus:quarkus-scheduler'
+
+
+    implementation 'io.quarkus:quarkus-hibernate-reactive'
+    implementation 'io.quarkus:quarkus-vertx'
+    implementation 'io.quarkus:quarkus-reactive-pg-client'
+    implementation 'com.linecorp.kotlin-jdsl:jpql-dsl:3.4.0'
+    implementation 'com.linecorp.kotlin-jdsl:jpql-render:3.4.0'
+    implementation 'com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.4.0'
+
+
+    implementation 'io.quarkus:quarkus-rest'
+    implementation 'io.quarkus:quarkus-kotlin'
+    implementation 'io.quarkus:quarkus-hibernate-reactive-panache-kotlin'
+    implementation 'io.quarkus:quarkus-smallrye-jwt'
+    implementation 'io.quarkus:quarkus-smallrye-jwt-build'
+    implementation 'io.quarkus:quarkus-reactive-routes'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-security-jpa-reactive'
+
+
+
+    implementation 'io.quarkus:quarkus-swagger-ui:3.21.0.CR1'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
+
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+group 'io.diplom'
+version '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+test {
+    systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+allOpen {
+    annotation("jakarta.ws.rs.Path")
+    annotation("jakarta.enterprise.context.ApplicationScoped")
+    annotation("jakarta.persistence.Entity")
+    annotation("io.quarkus.test.junit.QuarkusTest")
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_21
+    kotlinOptions.javaParameters = true
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_21
+}
