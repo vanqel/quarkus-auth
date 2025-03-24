@@ -7,7 +7,6 @@ import io.diplom.security.models.AuthorityName
 import java.time.LocalDate
 
 data class UserInput(
-    val login: String? = "user_${Math.random()*100000+100000}",
     val password: String,
     val firstName: String,
     val lastName: String,
@@ -20,7 +19,7 @@ data class UserInput(
     val birthDate: LocalDate?,
 ) {
     fun toUserEntity() = UserEntity(
-        username = login,
+        username = "user_${Math.random()*100000+100000}",
         password = password,
         email = email,
         phone = phoneNumber,
