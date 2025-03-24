@@ -31,7 +31,7 @@ class UserService(
     @Transactional
     @WithTransaction
     fun registerUser(user: UserInput): Uni<UserOutput> =
-        repository.checkExistsUsername(user.login, user.email, user.phoneNumber).flatMap {
+        repository.checkExistsUsername(user.email, user.phoneNumber).flatMap {
             if (it) {
                 Uni.createFrom().failure(ExistException())
             } else {

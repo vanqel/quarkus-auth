@@ -208,7 +208,7 @@ class SecurityConfiguration {
          * @param order тип фильтра. Порядок обработки фильтров определяется порядком элементов в списке.
          */
         fun authorized(uri: String, order: List<AuthOrder> = emptyList(), roles: List<String> = emptyList()): Builder = this.apply {
-            val orders = if (order.isEmpty()) filters.keys.toList() else order
+            val orders = order.ifEmpty { filters.keys.toList() }
 
             val rolesList = orders.flatMap {
                 roles.toMutableList().apply {
