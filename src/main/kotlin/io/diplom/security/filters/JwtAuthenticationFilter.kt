@@ -6,6 +6,7 @@ import io.diplom.security.models.User
 import io.diplom.service.JwtProvider
 import io.diplom.service.JwtProvider.Companion.PREFIX_VALUE
 import io.diplom.service.UserService
+import io.smallrye.jwt.build.Jwt
 import io.smallrye.mutiny.Uni
 import io.vertx.ext.auth.impl.jose.JWT
 import io.vertx.ext.web.RoutingContext
@@ -55,7 +56,7 @@ class JwtAuthenticationFilter(
             payload.getLong("exp") < System.currentTimeMillis() / 1000
         ) Uni.createFrom().failure(AuthException())
 
-        else Uni.createFrom().item(token)
+        else Uni.createFrom().item(payload.getString("username"))
     }.flatMap {
         jwtProvider.loginByUsername(it, context)
     }.map {

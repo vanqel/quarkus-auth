@@ -25,12 +25,15 @@ class WebConfig(
     @Startup
     fun config(): SecurityConfiguration =
         SecurityConfiguration.Builder
+
+            .addFilter(developerAuthenticationFilter, FilterType.DEVELOPER)
+            .addFilter(jwtAuthenticationFilter, FilterType.USER)
+
             .permitAll("/api/docs","/q/openapi")
             .permitAll("/q/dev-ui/*")
             .permitAll("/api/auth/*")
             .authorized("/api/user/*")
-            .addFilter(developerAuthenticationFilter, FilterType.DEVELOPER)
-            .addFilter(jwtAuthenticationFilter, FilterType.USER)
+
             .anyRequestPermitAll()
             .build()
 

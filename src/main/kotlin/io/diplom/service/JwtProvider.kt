@@ -38,6 +38,7 @@ class JwtProvider(
 
     fun setToken(user: UserEntity, ex: RoutingContext): Uni<AuthOutput>? =
         Uni.createFrom().item {
+
             generateToken(user)
         }.map {
             ex.response().putHeader(HEADER_NAME, PREFIX_VALUE + it)
