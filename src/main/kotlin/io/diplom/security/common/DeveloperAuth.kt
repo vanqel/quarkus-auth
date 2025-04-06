@@ -65,6 +65,7 @@ class DeveloperAuth(
     private val developerPrincipal = User(
         0,
         "admin",
+        1,
         "Разработчик",
         "-",
         "-",

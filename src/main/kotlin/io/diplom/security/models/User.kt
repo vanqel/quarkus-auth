@@ -6,6 +6,7 @@ import java.security.Principal
 class User(
     val id: Long,
     val username: String,
+    val personId: Long?,
     val firstName: String? = null,
     val secondName: String? = null,
     val lastName: String? = null,

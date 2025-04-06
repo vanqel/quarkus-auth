@@ -3,7 +3,13 @@ package io.diplom.models
 import io.diplom.security.models.Authority
 import io.diplom.security.models.User
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.time.LocalDateTime
@@ -41,7 +47,7 @@ class UserEntity(
      * Данные пользователя
      */
     @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
-    @Fetch(value = FetchMode.JOIN)    @JoinColumn(name = "person_id", nullable = false)
+    @Fetch(value = FetchMode.JOIN) @JoinColumn(name = "person_id", nullable = false)
     var person: PersonEntity? = null,
 
     /**
@@ -77,7 +83,7 @@ class UserEntity(
             firstName = person!!.name,
             lastName = person!!.surname,
             secondName = person!!.secondName,
-
+            personId = person?.id,
             authorities = roles.map { Authority(it.role!!) }
         )
     }

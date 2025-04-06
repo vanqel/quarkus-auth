@@ -18,6 +18,7 @@ import io.smallrye.mutiny.Uni
 import io.vertx.ext.web.RoutingContext
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
+import org.hibernate.query.Page
 
 @ApplicationScoped
 class UserService(
@@ -48,7 +49,6 @@ class UserService(
 
             if (user.role == AuthorityName.ADMIN)
                 Uni.createFrom().failure(GeneralException("Нельзя создать администратора", 500))
-
             else UserRoles(us, user.role)
                 .persist<UserRoles>()
                 .map { us }
@@ -94,6 +94,17 @@ class UserService(
      */
     @WithTransaction
     fun blockUser(id: Long): Uni<Boolean> = repository.blockUnblockUser(id)
+
+
+    /**
+     * Блокировка / разблокировка пользователя
+     */
+    @WithTransaction
+    fun allUsers(size: Int, page: Int): Uni<List<UserEntity>> = repository.findAll(Page.page(size, page))
+
+    @WithTransaction
+    fun updateMe(personEntity: PersonEntity) = repository.updatePerson(personEntity)
+
 
 }
 

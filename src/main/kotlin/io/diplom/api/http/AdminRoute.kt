@@ -21,4 +21,14 @@ class AdminRoute(
     fun blockUser(
         @Param("id") id: String?
     ) = authService.blockUser(id!!.toLong())
+
+    @RolesAllowed(value = ["ADMIN"])
+    @Route(
+        path = "list",
+        methods = [Route.HttpMethod.GET],
+    )
+    fun listUser(
+        @Param("size") size: Int?,
+        @Param("page") page: Int?
+    ) = authService.allUsers(size!!, page!!)
 }

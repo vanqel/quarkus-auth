@@ -32,7 +32,7 @@ class JwtProvider(
         return Jwt.issuer("Nikita Klykoit")
             .upn(user.email)
             .claim("username", user.username)
-            .expiresAt(System.currentTimeMillis() + jwtAge.toInt() * 60 * 1000) // 1 hour expiration
+            .expiresAt(System.currentTimeMillis() + jwtAge.toInt() * 60 * 1000)
             .signWithSecret(jwtSecret)
     }
 
@@ -42,6 +42,7 @@ class JwtProvider(
             generateToken(user)
         }.map {
             ex.response().putHeader(HEADER_NAME, PREFIX_VALUE + it)
+
             ex.response().addCookie(
                 Cookie.cookie(COOKIE_NAME, it)
                     .setMaxAge(jwtAge.toLong() * 60)

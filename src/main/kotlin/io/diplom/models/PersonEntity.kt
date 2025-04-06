@@ -2,9 +2,16 @@ package io.diplom.models
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
+import java.time.LocalDate
 
 @Entity
 @Table(name = "person")
@@ -25,7 +32,13 @@ class PersonEntity(
      * Отчество пользователя
      */
     @Column(name = "second_name")
-    val secondName: String? = null
+    val secondName: String? = null,
+
+    /**
+     * Отчество пользователя
+     */
+    @Column(name = "birth_date")
+    val birthDate: LocalDate? = null
 
 ) : PanacheEntity() {
 
@@ -39,5 +52,15 @@ class PersonEntity(
         referencedColumnName = "person_id"
     )
     var user: UserEntity? = null
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @Fetch(value = FetchMode.JOIN)
+    @JoinColumn(
+        name = "person_id",
+        updatable = false,
+        insertable = false,
+        referencedColumnName = "id"
+    )
+    val documents: MutableList<PersonDocuments> = mutableListOf()
 
 }

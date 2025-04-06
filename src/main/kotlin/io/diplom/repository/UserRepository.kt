@@ -1,15 +1,32 @@
 package io.diplom.repository
 
+import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
+import org.hibernate.query.Page
 import org.hibernate.reactive.mutiny.Mutiny
 
 @ApplicationScoped
 class UserRepository(
     val entityManager: Mutiny.SessionFactory
 ) {
+
+    /**
+     * Поиск пользователя по параметрам
+     */
+    fun findAll(page: Page): Uni<List<UserEntity>> = entityManager.withSession { session ->
+        session.createQuery(
+            "select u from UserEntity u join fetch u.roles r join fetch u.person",
+            UserEntity::class.java
+        ).setPage(page)
+            .resultList
+    }
+
+    fun updatePerson(personEntity: PersonEntity): Uni<PersonEntity> = entityManager.withSession { session ->
+        session.merge(personEntity)
+    }
 
 
     /**
@@ -43,7 +60,7 @@ class UserRepository(
      * Проверка на существование пользователя по параметрам
      */
     @WithTransaction
-    fun checkExistsUsername( email: String?, phone: String?) =
+    fun checkExistsUsername(email: String?, phone: String?) =
         entityManager.withSession { session ->
             session.createQuery(
                 "select exists(select 1 u from UserEntity u where email = :email or phone = :phone)",
