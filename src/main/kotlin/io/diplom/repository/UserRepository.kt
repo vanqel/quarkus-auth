@@ -60,7 +60,7 @@ class UserRepository(
      * Проверка на существование пользователя по параметрам
      */
     @WithTransaction
-    fun checkExistsUsername(email: String?, phone: String?) =
+    fun checkExistsUsername(email: String?, phone: String?): Uni<Boolean> =
         entityManager.withSession { session ->
             session.createQuery(
                 "select exists(select 1 u from UserEntity u where email = :email or phone = :phone)",

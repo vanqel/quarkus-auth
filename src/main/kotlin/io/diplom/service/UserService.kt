@@ -7,6 +7,7 @@ import io.diplom.dto.UserOutput
 import io.diplom.exception.ExistException
 import io.diplom.exception.GeneralException
 import io.diplom.exception.LoginException
+import io.diplom.exception.PasswordException
 import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
 import io.diplom.models.UserRoles
@@ -62,8 +63,9 @@ class UserService(
     @WithTransaction
     fun loginByUsername(payload: String, ex: RoutingContext): Uni<AuthOutput> =
         repository.findByUsername(payload).flatMap {
-            if (it == null) Uni.createFrom().failure(LoginException())
-            else Uni.createFrom().item(it)
+            it?.let {
+                Uni.createFrom().item(it)
+            } ?: Uni.createFrom().failure(LoginException())
         }.flatMap { user ->
             jwtProvider.setToken(user, ex)
         }
@@ -74,10 +76,12 @@ class UserService(
     @WithTransaction
     fun login(payload: LoginInput, ex: RoutingContext): Uni<AuthOutput> =
         repository.findByParams(payload.payload).flatMap {
-            if (BcryptUtil.matches(payload.password, it!!.password!!)) {
+            it ?: run { return@flatMap Uni.createFrom().failure(LoginException()) }
+
+            if (BcryptUtil.matches(payload.password, it.password!!)) {
                 Uni.createFrom().item(it)
             } else {
-                Uni.createFrom().failure(LoginException())
+                Uni.createFrom().failure(PasswordException())
             }
         }.flatMap { user ->
             jwtProvider.setToken(user, ex)

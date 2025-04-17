@@ -29,5 +29,6 @@ data class UserInput(
         name = firstName,
         surname = lastName,
         secondName = secondName,
+        birthDate = birthDate
     )
 }
