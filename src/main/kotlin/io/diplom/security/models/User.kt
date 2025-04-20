@@ -1,24 +1,49 @@
 package io.diplom.security.models
 
+import io.diplom.models.PersonEntity
 import java.security.Principal
+import java.time.LocalDateTime
 
 
 class User(
-    val id: Long,
-    val username: String,
-    val personId: Long?,
-    val firstName: String? = null,
-    val secondName: String? = null,
-    val lastName: String? = null,
-    var email: String?,
-    var phoneNumber: String?,
-    val authorities: List<Authority>,
-) : Principal {
+
+    var id: Long,
+    /**
+     * Логин пользователя
+     */
+    var username: String,
+    /**
+     * Электронная почта пользователя
+     */
+    var email: String? = null,
+    /**
+     * Номер телефона пользователя
+     */
+    var phone: String? = null,
+
+    /**
+     * Данные пользователя
+     */
+    var person: PersonEntity,
+
+    /**
+     * Дата регистрации пользователя
+     */
+    var createdAt: LocalDateTime,
+
+    /**
+     * Признак блокировки пользователя
+     */
+    var isBlocked: Boolean? = false,
+
+    val roles: List<Authority>,
+
+    ) : Principal {
 
     fun hasAuthority(
         authorityName: AuthorityName
     ): Boolean {
-        return this.authorities
+        return this.roles
             .any { a: Authority -> authorityName == a.name }
     }
 
@@ -30,5 +55,5 @@ class User(
         return true
     }
 
-    override fun getName(): String = username
+    override fun getName(): String = username!!
 }

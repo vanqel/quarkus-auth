@@ -44,7 +44,7 @@ class AuthOutput(
 
     var token: String? = null,
 
-    val roles: List<String>,
+    val roles: List<Authority>,
 
     @JsonIgnore
     var user: UserEntity? = null
@@ -60,7 +60,7 @@ class AuthOutput(
             person = userEntity.person,
             createdAt = userEntity.createdAt,
             user = userEntity,
-            roles = userEntity.roles.mapNotNull { it.role?.name }
+            roles = userEntity.roles.mapNotNull { it.role?.authority() }
         )
     }
 }

@@ -1,6 +1,7 @@
 package io.diplom.security.common
 
 import io.diplom.exception.GeneralException
+import io.diplom.models.PersonEntity
 import io.diplom.models.UserRoles
 import io.diplom.security.models.AuthorityName
 import io.diplom.security.models.User
@@ -13,6 +14,8 @@ import io.vertx.core.http.Cookie
 import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.intellij.lang.annotations.PrintFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 /**
@@ -65,12 +68,11 @@ class DeveloperAuth(
     private val developerPrincipal = User(
         0,
         "admin",
-        1,
+        "1",
         "Разработчик",
-        "-",
-        "-",
-        "admin@mail.ru",
-        "89518614347",
+        PersonEntity(),
+        LocalDateTime.now(),
+        false,
         listOf(AuthorityName.ADMIN.authority()),
     )
 

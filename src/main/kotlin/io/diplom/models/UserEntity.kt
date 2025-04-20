@@ -60,7 +60,7 @@ class UserEntity(
      * Признак блокировки пользователя
      */
     @Column(name = "is_blocked")
-    var isBlocked: Boolean? = false
+    var isBlocked: Boolean = false
 
 ) : PanacheEntity() {
 
@@ -75,16 +75,13 @@ class UserEntity(
     fun toUser(): User {
         return User(
             id = id!!,
-
             username = username!!,
             email = email,
-            phoneNumber = phone,
-
-            firstName = person!!.name,
-            lastName = person!!.surname,
-            secondName = person!!.secondName,
-            personId = person?.id,
-            authorities = roles.map { Authority(it.role!!) }
+            phone = phone,
+            person = person!!,
+            roles = roles.map { Authority(it.role!!) },
+            createdAt = createdAt,
+            isBlocked = isBlocked
         )
     }
 
