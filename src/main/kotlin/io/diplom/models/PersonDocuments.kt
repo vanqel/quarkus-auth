@@ -1,5 +1,6 @@
 package io.diplom.models
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -11,6 +12,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
+import java.time.LocalDate
 
 @Entity
 @Table(name = "documents")
@@ -24,6 +26,7 @@ class PersonDocuments(
     /**
      * Данные пользователя
      */
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.JOIN)
     @JoinColumn(name = "person_id", nullable = false)
@@ -39,7 +42,7 @@ class PersonDocuments(
     val authority: String? = null,
 
     @Column(nullable = false)
-    val dateIssue: String? = null,
+    val dateIssue: LocalDate? = null,
 
     @Column(nullable = false)
     val type: DocType? = null

@@ -1,8 +1,10 @@
 package io.diplom.service
 
 import io.diplom.dto.AuthOutput
+import io.diplom.exception.GeneralException
 import io.diplom.models.UserEntity
-import io.diplom.security.models.User
+import io.smallrye.jwt.auth.principal.JWTParser
+import io.smallrye.jwt.auth.principal.ParseException
 import io.smallrye.jwt.build.Jwt
 import io.smallrye.mutiny.Uni
 import io.vertx.core.http.Cookie
@@ -25,8 +27,24 @@ class JwtProvider(
      * JWT Expiration Time. Время жизни токена в минутах.
      */
     @ConfigProperty(name = "security.jwt.age")
-    private val jwtAge: String
+    private val jwtAge: String,
+
+    /**
+     * Парсер и валидатор для токена
+     */
+    private val jwtParser: JWTParser
 ) {
+
+    fun verify(token: String) =
+        runCatching {
+            jwtParser.verify(token, jwtSecret)
+        }.onFailure {
+            when (it) {
+                is ParseException -> throw GeneralException("Невалидный токен")
+                else -> throw GeneralException("Неизвестная ошибка")
+            }
+        }
+
 
     private fun generateToken(user: UserEntity): String {
         return Jwt.issuer("Nikita Klykoit")
@@ -56,7 +74,7 @@ class JwtProvider(
             }
         }
 
-    fun logout(ex: RoutingContext){
+    fun logout(ex: RoutingContext) {
         ex.response().removeCookie(COOKIE_NAME)
     }
 

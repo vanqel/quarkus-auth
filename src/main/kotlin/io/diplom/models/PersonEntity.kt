@@ -38,7 +38,18 @@ class PersonEntity(
      * Отчество пользователя
      */
     @Column(name = "birth_date")
-    val birthDate: LocalDate? = null
+    val birthDate: LocalDate? = null,
+
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.JOIN)
+    @JoinColumn(
+        name = "person_id",
+        updatable = false,
+        insertable = false,
+        referencedColumnName = "id"
+    )
+    val documents: MutableList<PersonDocuments> = mutableListOf()
 
 ) : PanacheEntity() {
 
@@ -52,15 +63,5 @@ class PersonEntity(
         referencedColumnName = "person_id"
     )
     var user: UserEntity? = null
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @Fetch(value = FetchMode.JOIN)
-    @JoinColumn(
-        name = "person_id",
-        updatable = false,
-        insertable = false,
-        referencedColumnName = "id"
-    )
-    val documents: MutableList<PersonDocuments> = mutableListOf()
 
 }
