@@ -51,7 +51,7 @@ class UserRoute(
         @Body personRequest: PersonEntity
     ): Uni<PersonEntity> {
         val user = securityIdentity.getUser()
-        if (personRequest.id != user.personId)
+        if (personRequest.id != user.person.id)
             throw AuthException()
 
         return userService.updateMe(personRequest)
