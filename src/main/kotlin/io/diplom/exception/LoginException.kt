@@ -1,4 +1,8 @@
 package io.diplom.exception
 
-class LoginException : GeneralException("Неверный логин", 403)
-class PasswordException : GeneralException("Неверный пароль", 403)
+
+/*
+Попросиили сделать одинаковым :)
+ */
+class LoginException : GeneralException("Неверный логин или пароль", 403)
+class PasswordException : GeneralException("Неверный логин или пароль", 403)
