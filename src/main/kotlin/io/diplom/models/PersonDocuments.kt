@@ -23,15 +23,6 @@ class PersonDocuments(
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 
-    /**
-     * Данные пользователя
-     */
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.JOIN)
-    @JoinColumn(name = "person_id", nullable = false)
-    var personId: PersonEntity? = null,
-
     @Column(nullable = false)
     val serial: String? = null,
 

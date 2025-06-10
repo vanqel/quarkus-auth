@@ -20,25 +20,25 @@ class PersonEntity(
      * Имя пользователя
      */
     @Column(name = "name")
-    val name: String? = null,
+    var name: String? = null,
 
     /**
      * Фамилия пользователя
      */
     @Column(name = "surname")
-    val surname: String? = null,
+    var surname: String? = null,
 
     /**
      * Отчество пользователя
      */
     @Column(name = "second_name")
-    val secondName: String? = null,
+    var secondName: String? = null,
 
     /**
      * Отчество пользователя
      */
     @Column(name = "birth_date")
-    val birthDate: LocalDate? = null,
+    var birthDate: LocalDate? = null,
 
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -49,19 +49,6 @@ class PersonEntity(
         insertable = false,
         referencedColumnName = "id"
     )
-    val documents: MutableList<PersonDocuments> = mutableListOf()
+    var documents: MutableList<PersonDocuments> = mutableListOf()
 
-) : PanacheEntity() {
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @Fetch(value = FetchMode.JOIN)
-    @JoinColumn(
-        name = "id",
-        updatable = false,
-        insertable = false,
-        referencedColumnName = "person_id"
-    )
-    var user: UserEntity? = null
-
-}
+) : PanacheEntity()

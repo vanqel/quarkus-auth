@@ -18,16 +18,23 @@ class UserRepository(
      */
     fun findAll(page: Page): Uni<List<UserEntity>> = entityManager.withSession { session ->
         session.createQuery(
-            "select u from UserEntity u join fetch u.roles r join fetch u.person",
+            "select u from UserEntity u",
             UserEntity::class.java
-        ).setPage(page)
-            .resultList
+        ).setPage(page).resultList
     }
 
-    fun updatePerson(personEntity: PersonEntity): Uni<PersonEntity> = entityManager.withSession { session ->
-        session.merge(personEntity)
+    @WithTransaction
+    fun updatePerson(personEntity: PersonEntity): Uni<PersonEntity> = entityManager.withTransaction { session ->
+        session.find(PersonEntity::class.java, personEntity.id)
+            .call { pe ->
+                pe.name = personEntity.name
+                pe.surname = personEntity.surname
+                pe.secondName = personEntity.secondName
+                pe.birthDate = personEntity.birthDate
+                pe.documents = personEntity.documents
+                pe.persistAndFlush<PersonEntity>()
+             }
     }
-
 
     /**
      * Поиск пользователя по параметрам
@@ -75,7 +82,7 @@ class UserRepository(
      * Проверка на существование пользователя по параметрам
      */
     @WithTransaction
-    fun blockUnblockUser(id: Long): Uni<Boolean> = entityManager.withSession { session ->
+    fun blockUnblockUser(id: Long): Uni<Boolean> = entityManager.withTransaction { session ->
         session.createQuery(
             "update UserEntity u set u.isBlocked = (not u.isBlocked) where id = :id",
             Int::class.java

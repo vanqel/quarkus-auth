@@ -163,46 +163,6 @@ class SecurityConfiguration {
          */
         private val defaultRoles: MutableMap<AuthOrder, List<String>> = mutableMapOf()
 
-        private fun checkState() {
-            if (defaultState != null) throw IllegalStateException("Доступы к остальным запросам уже заданы")
-        }
-
-        /**
-         * Неуказанные маршруты разрешены с авторизацией.
-         */
-        fun anyRequestAuthorized(): Builder = this.apply {
-            checkState()
-            defaultState = StateOther.AUTH
-            authorized("/*", filters.map { it.key })
-        }
-
-        /**
-         * Неуказанные маршруты разрешены для всех.
-         */
-        fun anyRequestPermitAll(): Builder = this.apply {
-            checkState()
-            defaultState = StateOther.PERMIT
-            permitAll("/*")
-        }
-
-        /**
-         * Неуказанные маршруты запрещены для всех.
-         */
-        fun anyRequestDenyAll(): Builder = this.apply {
-            checkState()
-            defaultState = StateOther.DENY
-            authorized("/*", listOf(DENY_ALL))
-        }
-
-        /**
-         * Не требует авторизации.
-         */
-        fun permitAll(vararg uri: String): Builder = this.apply {
-            uri.forEach {
-                paths.add(SecurityProperty(it, listOf(PERMIT_ALL)))
-            }
-        }
-
         /**
          * Авторизованные запросы.
          * @param order тип фильтра. Порядок обработки фильтров определяется порядком элементов в списке.
@@ -244,6 +204,49 @@ class SecurityConfiguration {
                 filters = filters,
                 defaultState = defaultState
             )
+
+
+        private fun checkState() {
+            if (defaultState != null) throw IllegalStateException("Доступы к остальным запросам уже заданы")
+        }
+
+        /**
+         * Неуказанные маршруты разрешены с авторизацией.
+         */
+        fun anyRequestAuthorized(): Builder = this.apply {
+            checkState()
+            defaultState = StateOther.AUTH
+            authorized("/*", filters.map { it.key })
+        }
+
+        /**
+         * Неуказанные маршруты разрешены для всех.
+         */
+        fun anyRequestPermitAll(): Builder = this.apply {
+            checkState()
+            defaultState = StateOther.PERMIT
+            permitAll("/*")
+        }
+
+        /**
+         * Неуказанные маршруты запрещены для всех.
+         */
+        fun anyRequestDenyAll(): Builder = this.apply {
+            checkState()
+            defaultState = StateOther.DENY
+            authorized("/*", listOf(DENY_ALL))
+        }
+
+        /**
+         * Не требует авторизации.
+         */
+        fun permitAll(vararg uri: String): Builder = this.apply {
+            uri.forEach {
+                paths.add(SecurityProperty(it, listOf(PERMIT_ALL)))
+            }
+        }
+
+
     }
 
     /**

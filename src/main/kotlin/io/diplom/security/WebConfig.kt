@@ -4,6 +4,7 @@ import io.diplom.security.configurator.SecurityConfiguration
 import io.diplom.security.filters.DeveloperAuthenticationFilter
 import io.diplom.security.filters.FilterType
 import io.diplom.security.filters.JwtAuthenticationFilter
+import io.diplom.security.models.AuthorityName
 import io.quarkus.runtime.Startup
 import jakarta.enterprise.context.ApplicationScoped
 
@@ -33,6 +34,7 @@ class WebConfig(
             .permitAll("/q/dev-ui/*")
             .permitAll("/api/auth/*")
             .authorized("/api/user/*")
+            .authorized("/admin-api/*", roles = listOf(AuthorityName.ADMIN.name))
 
             .anyRequestPermitAll()
             .build()

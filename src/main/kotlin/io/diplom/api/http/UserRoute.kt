@@ -3,6 +3,7 @@ package io.diplom.api.http
 import io.diplom.exception.AuthException
 import io.diplom.models.PersonEntity
 import io.diplom.security.configurator.getUser
+import io.diplom.security.models.AuthorityName
 import io.diplom.service.UserService
 import io.quarkus.security.identity.SecurityIdentity
 import io.quarkus.vertx.web.Body
@@ -51,7 +52,7 @@ class UserRoute(
         @Body personRequest: PersonEntity
     ): Uni<PersonEntity> {
         val user = securityIdentity.getUser()
-        if (personRequest.id != user.person.id)
+        if (personRequest.id != user.person.id && !user.hasAuthority(AuthorityName.ADMIN))
             throw AuthException()
 
         return userService.updateMe(personRequest)

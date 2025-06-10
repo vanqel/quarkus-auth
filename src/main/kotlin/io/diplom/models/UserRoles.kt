@@ -1,9 +1,11 @@
 package io.diplom.models
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.diplom.security.models.AuthorityName
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
@@ -16,7 +18,8 @@ class UserRoles(
     /**
      * Пользователь
      */
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     val uid: UserEntity? = null,
 
     /**

@@ -13,7 +13,6 @@ class AdminRoute(
     val authService: UserService
 ) {
 
-    @RolesAllowed(value = ["ADMIN"])
     @Route(
         path = "block",
         methods = [Route.HttpMethod.GET],
@@ -22,7 +21,6 @@ class AdminRoute(
         @Param("id") id: String?
     ) = authService.blockUser(id!!.toLong())
 
-    @RolesAllowed(value = ["ADMIN"])
     @Route(
         path = "list",
         methods = [Route.HttpMethod.GET],
