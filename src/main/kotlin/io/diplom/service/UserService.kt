@@ -1,6 +1,7 @@
 package io.diplom.service
 
 import io.diplom.dto.AuthOutput
+import io.diplom.dto.InputPersonEntity
 import io.diplom.dto.LoginInput
 import io.diplom.dto.UserInput
 import io.diplom.dto.UserOutput
@@ -107,7 +108,7 @@ class UserService(
     fun allUsers(size: Int, page: Int): Uni<List<UserEntity>> = repository.findAll(Page.page(size, page))
 
     @WithTransaction
-    fun updateMe(personEntity: PersonEntity) = repository.updatePerson(personEntity)
+    fun updateMe(personEntity: InputPersonEntity) = repository.updatePerson(personEntity)
 
 
 }

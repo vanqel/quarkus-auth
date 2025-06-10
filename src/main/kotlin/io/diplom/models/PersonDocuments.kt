@@ -1,6 +1,7 @@
 package io.diplom.models
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -18,11 +19,6 @@ import java.time.LocalDate
 @Table(name = "documents")
 class PersonDocuments(
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    var id: Long? = null,
-
     @Column(nullable = false)
     val serial: String? = null,
 
@@ -36,9 +32,11 @@ class PersonDocuments(
     val dateIssue: LocalDate? = null,
 
     @Column(nullable = false)
-    val type: DocType? = null
+    val type: DocType? = null,
 
-) {
+    @Column(nullable = false, name = "person_id")
+    var personId: Long? = null
+): PanacheEntity() {
     enum class DocType {
         PASSPORT, OMS, CV
     }

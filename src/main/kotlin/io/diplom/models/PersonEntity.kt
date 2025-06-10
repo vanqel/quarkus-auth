@@ -1,13 +1,12 @@
 package io.diplom.models
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -41,7 +40,7 @@ class PersonEntity(
     var birthDate: LocalDate? = null,
 
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
     @Fetch(value = FetchMode.JOIN)
     @JoinColumn(
         name = "person_id",
@@ -51,4 +50,6 @@ class PersonEntity(
     )
     var documents: MutableList<PersonDocuments> = mutableListOf()
 
-) : PanacheEntity()
+) : PanacheEntity() {
+    companion object
+}

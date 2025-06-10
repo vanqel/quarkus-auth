@@ -1,8 +1,10 @@
 package io.diplom.repository
 
+import io.diplom.dto.InputPersonEntity
 import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import org.hibernate.query.Page
@@ -24,16 +26,30 @@ class UserRepository(
     }
 
     @WithTransaction
-    fun updatePerson(personEntity: PersonEntity): Uni<PersonEntity> = entityManager.withTransaction { session ->
+    fun updatePerson(personEntity: InputPersonEntity): Uni<PersonEntity> = entityManager.withTransaction { session ->
+
         session.find(PersonEntity::class.java, personEntity.id)
             .call { pe ->
                 pe.name = personEntity.name
                 pe.surname = personEntity.surname
                 pe.secondName = personEntity.secondName
                 pe.birthDate = personEntity.birthDate
-                pe.documents = personEntity.documents
+                pe.documents.clear()
+                pe.persistAndFlush<PersonEntity>().map {
+                   session.removeAll(it.documents)
+                }.map {
+                    pe.documents.addAll(
+                        personEntity.documents
+                            .map { it.toEntity().also { it.personId = pe.id } }
+                    ) // фастом
+                    pe.persistAndFlush<PersonEntity>()
+                }.map {
+                    session.merge(pe)
+                }
+            }.call { pe ->
                 pe.persistAndFlush<PersonEntity>()
-             }
+
+            }
     }
 
     /**
