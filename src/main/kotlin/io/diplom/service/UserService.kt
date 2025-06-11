@@ -1,10 +1,10 @@
 package io.diplom.service
 
-import io.diplom.dto.AuthOutput
-import io.diplom.dto.InputPersonEntity
-import io.diplom.dto.LoginInput
-import io.diplom.dto.UserInput
-import io.diplom.dto.UserOutput
+import io.diplom.dto.out.AuthOutput
+import io.diplom.dto.inp.InputPersonEntity
+import io.diplom.dto.inp.LoginInput
+import io.diplom.dto.inp.UserInput
+import io.diplom.dto.out.UserOutput
 import io.diplom.exception.ExistException
 import io.diplom.exception.GeneralException
 import io.diplom.exception.LoginException

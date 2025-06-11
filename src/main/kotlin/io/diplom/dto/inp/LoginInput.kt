@@ -1,4 +1,4 @@
-package io.diplom.dto
+package io.diplom.dto.inp
 
 data class LoginInput(
     val payload: String,

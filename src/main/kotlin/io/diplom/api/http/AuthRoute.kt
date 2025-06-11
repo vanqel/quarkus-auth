@@ -1,7 +1,7 @@
 package io.diplom.api.http
 
-import io.diplom.dto.LoginInput
-import io.diplom.dto.UserInput
+import io.diplom.dto.inp.LoginInput
+import io.diplom.dto.inp.UserInput
 import io.diplom.service.UserService
 import io.quarkus.vertx.web.Body
 import io.quarkus.vertx.web.Route

@@ -1,6 +1,6 @@
 package io.diplom.api.http
 
-import io.diplom.dto.InputPersonEntity
+import io.diplom.dto.inp.InputPersonEntity
 import io.diplom.exception.AuthException
 import io.diplom.models.PersonEntity
 import io.diplom.security.configurator.getUser

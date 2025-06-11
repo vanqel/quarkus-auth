@@ -1,8 +1,7 @@
-package io.diplom.dto
+package io.diplom.dto.inp
 
 import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
-import io.diplom.models.UserRoles
 import io.diplom.security.models.AuthorityName
 import java.time.LocalDate
 

@@ -1,10 +1,15 @@
-package io.diplom.dto
+package io.diplom.dto.out
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
+import io.diplom.security.models.Authority
 import java.time.LocalDateTime
 
-class UserOutput(
+class AuthOutput(
+
+    var id: Long? = null,
+
     /**
      * Логин пользователя
      */
@@ -35,17 +40,27 @@ class UserOutput(
     /**
      * Признак блокировки пользователя
      */
-    var isBlocked: Boolean? = false
+    var isBlocked: Boolean? = false,
+
+    var token: String? = null,
+
+    val roles: List<Authority>,
+
+    @JsonIgnore
+    var user: UserEntity? = null
 ) {
+
+
     companion object {
-        fun fromEntity(userEntity: UserEntity): UserOutput {
-            return UserOutput(
-                username = userEntity.username,
-                email = userEntity.email,
-                phone = userEntity.phone,
-                person = userEntity.person,
-                createdAt = userEntity.createdAt
-            )
-        }
+        fun fromEntity(userEntity: UserEntity): AuthOutput = AuthOutput(
+            id = userEntity.id,
+            username = userEntity.username,
+            email = userEntity.email,
+            phone = userEntity.phone,
+            person = userEntity.person,
+            createdAt = userEntity.createdAt,
+            user = userEntity,
+            roles = userEntity.roles.mapNotNull { it.role?.authority() }
+        )
     }
 }

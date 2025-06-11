@@ -1,10 +1,11 @@
 package io.diplom.repository
 
-import io.diplom.dto.InputPersonEntity
+import io.diplom.dto.inp.InputPersonEntity
+import io.diplom.models.PersonDocuments
 import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
-import io.smallrye.mutiny.Multi
+import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepository
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import org.hibernate.query.Page
@@ -12,7 +13,9 @@ import org.hibernate.reactive.mutiny.Mutiny
 
 @ApplicationScoped
 class UserRepository(
-    val entityManager: Mutiny.SessionFactory
+    val entityManager: Mutiny.SessionFactory,
+    val personRepo: PanacheRepository<PersonEntity>,
+    val documentRepo: PanacheRepository<PersonDocuments>
 ) {
 
     /**
@@ -26,31 +29,19 @@ class UserRepository(
     }
 
     @WithTransaction
-    fun updatePerson(personEntity: InputPersonEntity): Uni<PersonEntity> = entityManager.withTransaction { session ->
-
-        session.find(PersonEntity::class.java, personEntity.id)
+    fun updatePerson(personEntity: InputPersonEntity): Uni<PersonEntity> =
+        personRepo.findById(personEntity.id!!)
             .call { pe ->
+                pe.documents.clear()
+                personRepo.persistAndFlush(pe)
+            }.flatMap { pe ->
                 pe.name = personEntity.name
                 pe.surname = personEntity.surname
                 pe.secondName = personEntity.secondName
                 pe.birthDate = personEntity.birthDate
-                pe.documents.clear()
-                pe.persistAndFlush<PersonEntity>().map {
-                   session.removeAll(it.documents)
-                }.map {
-                    pe.documents.addAll(
-                        personEntity.documents
-                            .map { it.toEntity().also { it.personId = pe.id } }
-                    ) // фастом
-                    pe.persistAndFlush<PersonEntity>()
-                }.map {
-                    session.merge(pe)
-                }
-            }.call { pe ->
-                pe.persistAndFlush<PersonEntity>()
-
+                pe.documents.addAll(personEntity.getDocsEntity())
+                personRepo.persistAndFlush(pe)
             }
-    }
 
     /**
      * Поиск пользователя по параметрам

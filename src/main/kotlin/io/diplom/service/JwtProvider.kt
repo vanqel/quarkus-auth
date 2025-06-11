@@ -1,6 +1,6 @@
 package io.diplom.service
 
-import io.diplom.dto.AuthOutput
+import io.diplom.dto.out.AuthOutput
 import io.diplom.exception.GeneralException
 import io.diplom.models.UserEntity
 import io.smallrye.jwt.auth.principal.JWTParser

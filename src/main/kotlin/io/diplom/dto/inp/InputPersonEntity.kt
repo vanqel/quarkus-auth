@@ -1,7 +1,6 @@
-package io.diplom.dto
+package io.diplom.dto.inp
 
 import io.diplom.models.PersonDocuments
-import io.diplom.models.PersonDocuments.DocType
 import java.time.LocalDate
 
 class InputPersonEntity(
@@ -31,25 +30,18 @@ class InputPersonEntity(
 
     var documents: MutableList<InputPersonDocuments> = mutableListOf()
 
-)
-
-
-class InputPersonDocuments(
-
-    var id: Long? = null,
-
-    val serial: String? = null,
-
-    val number: String? = null,
-
-    val authority: String? = null,
-
-    val dateIssue: LocalDate? = null,
-
-    val type: DocType? = null
-
 ) {
-    fun toEntity() = PersonDocuments(
-        serial, number, authority, dateIssue, type
-    )
+
+    fun getDocsEntity() = documents.map {
+        PersonDocuments(
+            serial = it.serial,
+            number = it.number,
+            authority = it.authority,
+            dateIssue = it.dateIssue,
+            type = it.type,
+            personId = this.id
+        )
+    }
+
 }
+
