@@ -47,7 +47,12 @@ class User(
             .any { a: Authority -> authorityName == a.name }
     }
 
-
+    fun hasAuthority(
+        vararg authorityName: AuthorityName
+    ): Boolean {
+        return this.roles
+            .any { a: Authority -> a.name in authorityName }
+    }
 
 
     val orgOidRestriction: String?

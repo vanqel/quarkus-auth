@@ -51,5 +51,7 @@ class PersonEntity(
     var documents: MutableList<PersonDocuments> = mutableListOf()
 
 ) : PanacheEntity() {
+
     companion object
+
 }

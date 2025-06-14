@@ -1,7 +1,9 @@
 package io.diplom.api.http
 
+import io.diplom.dto.inp.InputPersonDocumentsApproved
 import io.diplom.dto.inp.InputPersonEntity
 import io.diplom.exception.AuthException
+import io.diplom.models.PersonDocuments
 import io.diplom.models.PersonEntity
 import io.diplom.security.configurator.getUser
 import io.diplom.security.models.AuthorityName
@@ -57,6 +59,24 @@ class UserRoute(
             throw AuthException()
 
         return userService.updateMe(personRequest)
+    }
+
+    /**
+     * Аутентификация пользователя
+     */
+    @Route(
+        path = "/docs/approve",
+        methods = [Route.HttpMethod.POST],
+        produces = [MediaType.APPLICATION_JSON]
+    )
+    fun approve(
+        @Body personRequest: InputPersonDocumentsApproved
+    ): Uni<PersonDocuments> {
+        val user = securityIdentity.getUser()
+        if (!user.hasAuthority(AuthorityName.ADMIN, AuthorityName.WORKER))
+            throw AuthException()
+
+        return userService.updateStatusDocument(personRequest)
     }
 
 

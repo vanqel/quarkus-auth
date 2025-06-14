@@ -1,11 +1,7 @@
 package io.diplom.repository
 
-import io.diplom.dto.inp.InputPersonEntity
-import io.diplom.models.PersonDocuments
-import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
-import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepository
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import org.hibernate.query.Page
@@ -14,8 +10,6 @@ import org.hibernate.reactive.mutiny.Mutiny
 @ApplicationScoped
 class UserRepository(
     val entityManager: Mutiny.SessionFactory,
-    val personRepo: PanacheRepository<PersonEntity>,
-    val documentRepo: PanacheRepository<PersonDocuments>
 ) {
 
     /**
@@ -28,20 +22,6 @@ class UserRepository(
         ).setPage(page).resultList
     }
 
-    @WithTransaction
-    fun updatePerson(personEntity: InputPersonEntity): Uni<PersonEntity> =
-        personRepo.findById(personEntity.id!!)
-            .call { pe ->
-                pe.documents.clear()
-                personRepo.persistAndFlush(pe)
-            }.flatMap { pe ->
-                pe.name = personEntity.name
-                pe.surname = personEntity.surname
-                pe.secondName = personEntity.secondName
-                pe.birthDate = personEntity.birthDate
-                pe.documents.addAll(personEntity.getDocsEntity())
-                personRepo.persistAndFlush(pe)
-            }
 
     /**
      * Поиск пользователя по параметрам
@@ -73,7 +53,37 @@ class UserRepository(
     /**
      * Проверка на существование пользователя по параметрам
      */
-    @WithTransaction
+    fun checkExistsPhone(phone: String?, personId: Long): Uni<Boolean> =
+        entityManager.withSession { session ->
+            session.createQuery(
+                "select exists(select 1 u from UserEntity u where phone = :phone and person.id != :personId)",
+                Boolean::class.java
+            ).setParameter("phone", phone)
+                .setParameter("personId", personId)
+
+                .singleResultOrNull
+
+        }
+
+
+    /**
+     * Проверка на существование пользователя по параметрам
+     */
+    fun checkExistsEmail(email: String?, personId: Long): Uni<Boolean> =
+        entityManager.withSession { session ->
+            session.createQuery(
+                "select exists(select 1 u from UserEntity u where email = :email and person.id != :personId)",
+                Boolean::class.java
+            ).setParameter("email", email)
+                .setParameter("personId", personId)
+                .singleResultOrNull
+
+        }
+
+
+    /**
+     * Проверка на существование пользователя по параметрам
+     */
     fun checkExistsUsername(email: String?, phone: String?): Uni<Boolean> =
         entityManager.withSession { session ->
             session.createQuery(
@@ -81,6 +91,20 @@ class UserRepository(
                 Boolean::class.java
             ).setParameter("email", email)
                 .setParameter("phone", phone)
+                .singleResultOrNull
+
+        }
+
+
+    /**
+     * Проверка на существование пользователя по параметрам
+     */
+    fun findUserByPersonId(personId: Long): Uni<UserEntity> =
+        entityManager.withSession { session ->
+            session.createQuery(
+                "select u from UserEntity u where person.id = :id ",
+                UserEntity::class.java
+            ).setParameter("id", personId)
                 .singleResultOrNull
 
         }

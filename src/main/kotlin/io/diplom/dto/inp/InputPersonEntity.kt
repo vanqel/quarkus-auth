@@ -27,10 +27,27 @@ class InputPersonEntity(
      */
     var birthDate: LocalDate? = null,
 
+    /**
+     * Почта пользователя
+     */
+    var email: String? = null,
+
+    /**
+     * Телефон пользователя
+     */
+    val phone: String? = null,
+
+    /**
+     * Пароль пользователя
+     */
+    val password: String? = null,
 
     var documents: MutableList<InputPersonDocuments> = mutableListOf()
 
 ) {
+
+    var documentsEntity: MutableList<PersonDocuments> = mutableListOf()
+
 
     fun getDocsEntity() = documents.map {
         PersonDocuments(
