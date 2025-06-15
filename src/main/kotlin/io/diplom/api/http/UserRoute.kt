@@ -19,7 +19,7 @@ import jakarta.inject.Inject
 import jakarta.ws.rs.core.MediaType
 
 @ApplicationScoped
-@RouteBase(path = "/api/user")
+@RouteBase(path = "user")
 class UserRoute(
     val userService: UserService
 ) {

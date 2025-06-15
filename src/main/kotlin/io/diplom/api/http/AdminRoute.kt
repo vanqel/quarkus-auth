@@ -8,7 +8,7 @@ import jakarta.annotation.security.RolesAllowed
 import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-@RouteBase(path = "/admin-api")
+@RouteBase(path = "admin-api")
 class AdminRoute(
     val authService: UserService
 ) {

@@ -11,7 +11,6 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.core.MediaType
 
 @ApplicationScoped
-@RouteBase(path = "/api/auth")
 class AuthRoute(
     val authService: UserService
 ) {
