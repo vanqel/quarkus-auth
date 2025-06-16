@@ -30,10 +30,10 @@ class WebConfig(
             .addFilter(developerAuthenticationFilter, FilterType.DEVELOPER)
             .addFilter(jwtAuthenticationFilter, FilterType.USER)
 
-            .permitAll("/api/docs","/q/openapi")
+            .permitAll("/docs","/q/openapi")
             .permitAll("/q/dev-ui/*")
-            .permitAll("/api/auth/*")
-            .authorized("/api/user/*")
+            .permitAll("/auth/*")
+            .authorized("/user/*")
             .authorized("/admin-api/*", roles = listOf(AuthorityName.ADMIN.name))
 
             .anyRequestPermitAll()
