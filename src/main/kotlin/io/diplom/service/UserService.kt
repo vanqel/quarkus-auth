@@ -134,14 +134,14 @@ class UserService(
             if (personEntity.id == null) return Uni.createFrom().failure { GeneralException("Физ лицо не найдено") }
 
             val uniCheckPhone = personEntity.phone?.let {
-                repository.checkExistsPhone(personEntity.phone, personEntity.id!!).flatMap {
+                repository.checkExistsPhone(it, personEntity.id!!).onFailure().recoverWithItem(false).flatMap {
                     if (it) Uni.createFrom().failure(GeneralException("Пользователь с данным телефоном уже существует"))
                     else Uni.createFrom().item(false)
                 }
             }
 
             val uniCheckEmail = personEntity.email?.let {
-                repository.checkExistsEmail(personEntity.email, personEntity.id!!).flatMap {
+                repository.checkExistsEmail(it, personEntity.id!!).onFailure().recoverWithItem(false).flatMap {
                     if (it) Uni.createFrom().failure(GeneralException("Пользователь с данной почтой уже существует"))
                     else Uni.createFrom().item(false)
                 }
@@ -149,7 +149,7 @@ class UserService(
 
             val checks = Uni.combine().all().unis<Boolean>(
                 listOfNotNull(uniCheckEmail, uniCheckPhone)
-            ).collectFailures().with { true }
+            ).with { true }
 
             val personUpdate = personRepositoryPanache.findById(personEntity.id!!)
                 .call { pe ->
@@ -192,8 +192,9 @@ class UserService(
                     userRepositoryPanache.persistAndFlush(pe)
                 }
 
-            checks.call { e -> userUpdate }
-                .flatMap { e -> personUpdate }
+            checks.call { e ->
+                userUpdate
+            }.flatMap { e -> personUpdate }
         }
 
     @WithTransaction

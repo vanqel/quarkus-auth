@@ -53,7 +53,7 @@ class UserRepository(
     /**
      * Проверка на существование пользователя по параметрам
      */
-    fun checkExistsPhone(phone: String?, personId: Long): Uni<Boolean> =
+    fun checkExistsPhone(phone: String, personId: Long): Uni<Boolean> =
         entityManager.withSession { session ->
             session.createQuery(
                 "select exists(select 1 u from UserEntity u where phone = :phone and person.id != :personId)",
@@ -61,7 +61,7 @@ class UserRepository(
             ).setParameter("phone", phone)
                 .setParameter("personId", personId)
 
-                .singleResultOrNull
+                .singleResult
 
         }
 
@@ -69,15 +69,14 @@ class UserRepository(
     /**
      * Проверка на существование пользователя по параметрам
      */
-    fun checkExistsEmail(email: String?, personId: Long): Uni<Boolean> =
+    fun checkExistsEmail(email: String, personId: Long): Uni<Boolean> =
         entityManager.withSession { session ->
             session.createQuery(
                 "select exists(select 1 u from UserEntity u where email = :email and person.id != :personId)",
                 Boolean::class.java
             ).setParameter("email", email)
                 .setParameter("personId", personId)
-                .singleResultOrNull
-
+                .singleResult
         }
 
 
