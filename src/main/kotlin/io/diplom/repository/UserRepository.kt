@@ -1,11 +1,9 @@
 package io.diplom.repository
 
 import io.diplom.dto.inp.InputPersonEntity
-import io.diplom.models.PersonDocuments
 import io.diplom.models.PersonEntity
 import io.diplom.models.UserEntity
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
-import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepository
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import org.hibernate.query.Page
@@ -14,8 +12,7 @@ import org.hibernate.reactive.mutiny.Mutiny
 @ApplicationScoped
 class UserRepository(
     val entityManager: Mutiny.SessionFactory,
-    val personRepo: PanacheRepository<PersonEntity>,
-    val documentRepo: PanacheRepository<PersonDocuments>
+    val personRepo: PersonRepositoryPanache,
 ) {
 
     /**
@@ -90,7 +87,7 @@ class UserRepository(
      */
     @WithTransaction
     fun blockUnblockUser(id: Long): Uni<Boolean> =
-        userRepositoryPanache.update("set u.isBlocked = (not u.isBlocked) where id = :id", id)
+        personRepo.update("set u.isBlocked = (not u.isBlocked) where id = :id", id)
             .map { true }
 
 }
