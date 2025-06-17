@@ -1,4 +1,4 @@
-package io.diplom.extension
+package io.digitaltechs.common.extension
 
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
@@ -11,6 +11,5 @@ fun <T> multiFromIterable(iterable: Iterable<T>): Multi<T> = Multi.createFrom().
 fun <O> Multi<Uni<O>>.flatten(): Multi<O> = this.flatMap { it.convert().toPublisher() }
 
 fun <O> Multi<O>.toPublisher(): Flow.Publisher<O> = this.convert().toPublisher()
-
 fun <O> Uni<O>.toPublisher(): Flow.Publisher<O> = this.convert().toPublisher()
 
