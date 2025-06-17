@@ -89,12 +89,8 @@ class UserRepository(
      * Проверка на существование пользователя по параметрам
      */
     @WithTransaction
-    fun blockUnblockUser(id: Long): Uni<Boolean> = entityManager.withTransaction { session ->
-        session.createQuery(
-            "update UserEntity u set u.isBlocked = (not u.isBlocked) where id = :id",
-            Int::class.java
-        ).setParameter("id", id)
-            .singleResult
-    }.map { it > 0 }
+    fun blockUnblockUser(id: Long): Uni<Boolean> =
+        userRepositoryPanache.update("set u.isBlocked = (not u.isBlocked) where id = :id", id)
+            .map { true }
 
 }
