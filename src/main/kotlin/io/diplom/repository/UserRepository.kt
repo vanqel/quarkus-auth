@@ -114,7 +114,7 @@ class UserRepository(
      */
     @WithTransaction
     fun blockUnblockUser(id: Long): Uni<Boolean> =
-        userRepositoryPanache.update("set u.isBlocked = (not u.isBlocked) where id = :id", id)
+        userRepositoryPanache.update("set isBlocked = (not isBlocked) where id = ?1", id)
             .map { true }
 
 }
