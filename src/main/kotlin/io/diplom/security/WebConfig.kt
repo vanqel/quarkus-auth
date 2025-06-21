@@ -34,7 +34,7 @@ class WebConfig(
             .permitAll("/q/dev-ui/*")
             .permitAll("/auth/*")
             .authorized("/user/*")
-            .authorized("/admin-api/*", roles = listOf(AuthorityName.ADMIN.name))
+            .authorized("/admin-api/*", roles = listOf(AuthorityName.ADMIN.name, AuthorityName.WORKER.name))
 
             .anyRequestPermitAll()
             .build()
