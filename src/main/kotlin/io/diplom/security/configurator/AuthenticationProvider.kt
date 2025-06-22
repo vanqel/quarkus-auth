@@ -56,7 +56,7 @@ class AuthenticationProvider(
                     else Uni.createFrom().item(auths.first())
                 }
             }.flatMap { u ->
-                handlers.roles.any { !u.hasAuthority(AuthorityName.valueOf(it)) }.let {
+                (handlers.roles.isEmpty() || handlers.roles.any { !u.hasAuthority(AuthorityName.valueOf(it)) }).let {
                     if (!it) Uni.createFrom().failure(AuthException(context.request().uri()))
                     else Uni.createFrom().item(u)
                 }
